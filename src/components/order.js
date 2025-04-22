@@ -17,7 +17,7 @@ const WhatsAppOrderForm = () => {
       : `https://web.whatsapp.com/send?phone=919868552523&text=${encodedMessage}`; // for desktop
   
     window.open(baseURL, '_blank');
-  };
+  
   };
 
   return (
