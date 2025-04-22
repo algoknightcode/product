@@ -13,11 +13,10 @@ const WhatsAppOrderForm = () => {
   
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     const baseURL = isMobile
-      ? `https://wa.me/919868552523?text=${encodedMessage}`   // for phones
-      : `https://web.whatsapp.com/send?phone=919868552523&text=${encodedMessage}`; // for desktop
+      ? `https://wa.me/919868552523?text=${encodedMessage}`   // opens in app
+      : `https://web.whatsapp.com/send?phone=919868552523&text=${encodedMessage}`; // web version
   
-    window.open(baseURL, '_blank');
-  
+    window.location.href = baseURL;
   };
 
   return (
