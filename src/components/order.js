@@ -7,14 +7,17 @@ const WhatsAppOrderForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+  
     const message = `🛍️ *New Order!*\n\n👤 Name: ${name}\n🏠 Address: ${address}\n📦 Product: ${product}`;
     const encodedMessage = encodeURIComponent(message);
-
-    // This will open WhatsApp Web with the message
-    const whatsappURL = `https://web.whatsapp.com/send?phone=919868552523&text=${encodedMessage}`;
-
-    window.open(whatsappURL, '_blank');
+  
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    const baseURL = isMobile
+      ? `https://wa.me/919868552523?text=${encodedMessage}`   // for phones
+      : `https://web.whatsapp.com/send?phone=919868552523&text=${encodedMessage}`; // for desktop
+  
+    window.open(baseURL, '_blank');
+  };
   };
 
   return (
