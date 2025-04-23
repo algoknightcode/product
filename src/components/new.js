@@ -4,7 +4,6 @@ import { QRCodeCanvas } from "qrcode.react";
 const PaymentAndOrder = () => {
   const [paymentStatus, setPaymentStatus] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [manualRequestSent, setManualRequestSent] = useState(false);
   const [showConfirmPaymentButton, setShowConfirmPaymentButton] = useState(false);
 
@@ -26,20 +25,10 @@ const PaymentAndOrder = () => {
   };
 
   const sendManualConfirmationRequest = () => {
-    setLoading(true);
     setManualRequestSent(true);
-
-    setTimeout(() => {
-      const adminConfirmed = window.confirm("Did you receive ₹199? Click OK to confirm.");
-      if (adminConfirmed) {
-        setPaymentStatus(true);
-        sendWhatsAppOrder();
-        setShowModal(true);
-      } else {
-        alert("Payment not confirmed.");
-      }
-      setLoading(false);
-    }, 3000);
+    setPaymentStatus(true);
+    sendWhatsAppOrder();
+    setShowModal(true);
   };
 
   const sendWhatsAppOrder = () => {
@@ -57,8 +46,20 @@ const PaymentAndOrder = () => {
     <div style={{ maxWidth: '600px', margin: 'auto', padding: '2rem', textAlign: 'center' }}>
       <h2>🛒 Place Your Order</h2>
       <form onSubmit={(e) => e.preventDefault()}>
-        <input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} required /><br /><br />
-        <input type="text" placeholder="Address" value={address} onChange={(e) => setAddress(e.target.value)} required /><br /><br />
+        <input
+          type="text"
+          placeholder="Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+        /><br /><br />
+        <input
+          type="text"
+          placeholder="Address"
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
+          required
+        /><br /><br />
         <select value={product} onChange={(e) => setProduct(e.target.value)}>
           <option value="T-shirt">T-shirt</option>
           <option value="Shoes">Shoes</option>
@@ -85,8 +86,6 @@ const PaymentAndOrder = () => {
           Confirm Payment
         </button>
       )}
-
-      {loading && <p><em>Waiting for admin confirmation...</em></p>}
 
       {showModal && (
         <div style={modalBackdrop}>
