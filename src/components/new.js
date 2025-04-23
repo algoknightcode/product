@@ -15,6 +15,9 @@ const PaymentAndOrder = () => {
   const upiId = "9868552523@pthdfc";
   const upiUrl = `upi://pay?pa=${upiId}&pn=Simran&am=${amount}&cu=INR`;
 
+  const isAndroid = /Android/i.test(navigator.userAgent);
+  const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+
   const openGooglePay = () => {
     if (!name || !address || !product) {
       alert("Please fill the order form before proceeding to payment.");
@@ -67,16 +70,42 @@ const PaymentAndOrder = () => {
         </select><br /><br />
       </form>
 
-      <h2>Pay ₹{amount} via Google Pay</h2>
-      <p>Scan QR or click the button below:</p>
+      <h2>Pay ₹{amount} via UPI</h2>
+      <p>Scan the QR code below to pay:</p>
       <QRCodeCanvas value={upiUrl} size={200} /><br /><br />
 
-      {!showConfirmPaymentButton && (
+      {/* Android users: Show GPay button */}
+      {isAndroid && !showConfirmPaymentButton && (
         <button onClick={openGooglePay} style={buttonStyle("#34b7f1")}>
           Open Google Pay
         </button>
       )}
 
+      {/* iOS users: Show scan message */}
+      {isIOS && (
+        <p style={{ fontStyle: "italic", color: "#555", marginBottom: "20px" }}>
+          📱 iPhone user? Please scan this QR using your UPI app (PhonePe, Google Pay, Paytm, etc.)
+        </p>
+      )}
+
+      {/* Laptop or non-mobile users: Display message */}
+      {!isAndroid && !isIOS && (
+        <p style={{ fontStyle: "italic", color: "#777", marginBottom: "20px" }}>
+          💻 On laptop? Please scan the QR using any UPI app.
+        </p>
+      )}
+
+      {/* For iOS or Laptop users: Show 'Confirm Payment' button after scanning QR */}
+      {(!isAndroid && name && address && product && !paymentStatus && !manualRequestSent) && (
+        <button
+          onClick={() => setShowConfirmPaymentButton(true)}
+          style={buttonStyle("#34b7f1")}
+        >
+          I Have Scanned the QR
+        </button>
+      )}
+
+      {/* Show Confirm Payment Button after clicking "I Have Scanned the QR" */}
       {showConfirmPaymentButton && !paymentStatus && (
         <button
           onClick={sendManualConfirmationRequest}
@@ -87,6 +116,7 @@ const PaymentAndOrder = () => {
         </button>
       )}
 
+      {/* Modal on successful payment */}
       {showModal && (
         <div style={modalBackdrop}>
           <div style={modalContent}>
@@ -102,6 +132,7 @@ const PaymentAndOrder = () => {
   );
 };
 
+// Button styles
 const buttonStyle = (bg, disabled = false) => ({
   padding: "12px 20px",
   backgroundColor: bg,
@@ -114,6 +145,7 @@ const buttonStyle = (bg, disabled = false) => ({
   marginBottom: "10px",
 });
 
+// Modal styles
 const modalBackdrop = {
   position: "fixed",
   top: "0", left: "0", right: "0", bottom: "0",
